@@ -3,3 +3,5 @@ streamlit_javascript
 pandas
 requests
 openpyxl
+altair
+numpy
