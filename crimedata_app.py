@@ -13,7 +13,6 @@ import municipal
 st.set_page_config(layout="wide")
 window_width = st_js.st_javascript('window.innerWidth')
 
-st.write(f'{window_width}')
 
 # MAIN DISPLAY AT STARTUP
 st.write(f"""
