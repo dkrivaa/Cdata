@@ -9,10 +9,19 @@ def muni_data(muni, crimegroup4, crimetype4, window_width):
     st.write(f"""
             ### Municipal Data: {muni}
             """)
-    col1, col2, col3 = st.columns(3)
+
+    # Setting the number of columns according to width of window being used
+    if window_width <= 600:
+        ncol = 1
+    elif 600 < window_width <= 1100:
+        ncol = 2
+    elif window_width > 1100:
+        ncol = 3
+
+    # The graph functions
 
     # QUARTERLY DATA FOR SPECIFIED DISTRICT
-    with col1:
+    def municipal1():
         st.markdown(f"""
         Total cases by year for: **{muni}**
         """)
@@ -32,7 +41,7 @@ def muni_data(muni, crimegroup4, crimetype4, window_width):
         except:
             st.write('**NO DATA**')
 
-    with col2:
+    def municipal2():
         st.markdown(f"""
         Total cases by quarter for: **{muni}**
         """)
@@ -53,7 +62,7 @@ def muni_data(muni, crimegroup4, crimetype4, window_width):
         except:
             st.write('**NO DATA**')
 
-    with col3:
+    def municipal3():
         st.write(f"""
         Total cases by type of municipality: **{latest_quarter} {latest_year} {muni}**  
             """)
@@ -77,7 +86,7 @@ def muni_data(muni, crimegroup4, crimetype4, window_width):
         except:
             st.write('**NO DATA**')
 
-    with col1:
+    def municipal4():
         st.markdown(f"""
         Total cases by year (**same period**) for: **{muni}**
         """)
@@ -99,10 +108,8 @@ def muni_data(muni, crimegroup4, crimetype4, window_width):
         except:
             st.write('**NO DATA**')
 
-
-
     # Total category of crime by quarter
-    with col2:
+    def municipal5():
         st.markdown(f"""
         **{crimegroup4}** by quarter **{muni}**
         """)
@@ -125,7 +132,7 @@ def muni_data(muni, crimegroup4, crimetype4, window_width):
             st.write('**NO DATA**')
 
     # Total category of crime by quarter
-    with col3:
+    def municipal6():
         st.markdown(f"""
         **{crimetype4}** by quarter **{muni}**
         """)
@@ -147,3 +154,21 @@ def muni_data(muni, crimegroup4, crimetype4, window_width):
             st.altair_chart(chart, use_container_width=True)
         except:
             st.write(' **NO DATA**')
+
+    # Making the columns
+    cols = st.columns(ncol)
+    # Making list of the graph functions
+    functions = [municipal1, municipal2, municipal3, municipal4,
+                 municipal5, municipal6]
+
+    # Putting the graphs in the right columns
+    num_functions = len(functions)
+
+    column_index = 0
+    col_list = st.columns(ncol)
+
+    for i in range(num_functions):
+        column_index = i % ncol
+
+        with col_list[column_index]:
+            functions[i]()
