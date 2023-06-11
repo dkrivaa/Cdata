@@ -8,9 +8,19 @@ def national_data(crimegroup, crimetype, window_width):
     st.write("""
         ### Nationwide Data
         """)
-    col1, col2, col3 = st.columns(3)
+
+    # Setting the number of columns according to width of window being used
+    if window_width <= 600:
+        ncol = 1
+    elif 600 < window_width <= 1100:
+        ncol = 2
+    elif window_width > 1100:
+        ncol = 3
+
+    # The graph functions
+
     # ANNUAL TOTAL DATA NATIONWIDE
-    with col1:
+    def national1():
         st.markdown("""
         Total cases by **year**
         """)
@@ -30,7 +40,7 @@ def national_data(crimegroup, crimetype, window_width):
             st.write('**NO DATA**')
 
     # QUARTERLY TOTAL DATA NATIONWIDE
-    with col2:
+    def national2():
         st.markdown("""
         Total cases by **quarter**
         """)
@@ -52,7 +62,7 @@ def national_data(crimegroup, crimetype, window_width):
             st.write('**NO DATA**')
 
     # LATEST QUARTER CRIMES BY GROUP OF TYPES OF CRIME
-    with col3:
+    def national3():
         st.write(f"""
         Total cases by crime group: **{latest_quarter} {latest_year}**  
             """)
@@ -71,7 +81,7 @@ def national_data(crimegroup, crimetype, window_width):
         except:
             st.write('**NO DATA**')
 
-    with col1:
+    def national4():
         st.markdown("""
         Total cases by year (**same period**)
         """)
@@ -93,7 +103,7 @@ def national_data(crimegroup, crimetype, window_width):
             st.write('**NO DATA**')
 
     # Total category of crime by quarter
-    with col2:
+    def national5():
         try:
             st.markdown(f"""
             **{crimegroup}** by quarter
@@ -115,7 +125,7 @@ def national_data(crimegroup, crimetype, window_width):
             st.write(' **NO DATA**')
 
     # Total category of crime by quarter
-    with col3:
+    def national6():
         try:
             st.markdown(f"""
             **{crimetype}** by quarter
@@ -136,7 +146,7 @@ def national_data(crimegroup, crimetype, window_width):
         except:
             st.write(' **NO DATA**')
 
-    with col1:
+    def national7():
         try:
             st.markdown("""
                         **Percent of cases in **arab municipalities** by quarter**
@@ -159,3 +169,21 @@ def national_data(crimegroup, crimetype, window_width):
             st.altair_chart(chart, use_container_width=True)
         except:
             st.write(' **NO DATA**')
+
+    # Making the columns
+    cols = st.columns(ncol)
+    # Making list of the graph functions
+    functions = [national1, national2, national3, national4,
+                 national5, national6, national7]
+
+    # Putting the graphs in the right columns
+    num_functions = len(functions)
+
+    column_index = 0
+    col_list = st.columns(ncol)
+
+    for i in range(num_functions):
+        column_index = i % ncol
+
+        with col_list[column_index]:
+            functions[i]()
