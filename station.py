@@ -154,20 +154,20 @@ def station_data(tachana, crimegroup3, crimetype3, window_width):
         except:
             st.write(' **NO DATA**')
 
-        # Making the columns
-        cols = st.columns(ncol)
-        # Making list of the graph functions
-        functions = [station1, station2, station3, station4,
-                     station5, station6]
+    # Making the columns
+    cols = st.columns(ncol)
+    # Making list of the graph functions
+    functions = [station1, station2, station3, station4,
+                 station5, station6]
 
-        # Putting the graphs in the right columns
-        num_functions = len(functions)
+    # Putting the graphs in the right columns
+    num_functions = len(functions)
 
-        column_index = 0
-        col_list = st.columns(ncol)
+    column_index = 0
+    col_list = st.columns(ncol)
 
-        for i in range(num_functions):
-            column_index = i % ncol
+    for i in range(num_functions):
+        column_index = i % ncol
 
-            with col_list[column_index]:
-                functions[i]()
+        with col_list[column_index]:
+            functions[i]()
