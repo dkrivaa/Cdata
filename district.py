@@ -111,6 +111,7 @@ def district_data(district, crimegroup1, crimetype1, window_width):
                 Total cases by Police Region in: **{district}**
                 """)
         try:
+            dfi = df_quarter.loc[df['PoliceDistrict'] == district]
             dfs = dfi.loc[(dfi['year'] == latest_year) & (dfi['quarter'] == latest_quarter)]
             total = pd.DataFrame({'value': list(dfs.groupby(dfi['PoliceMerhav'])['TikimSum'].sum().values),
                                   'category': list(sorted(dfs['PoliceMerhav'].unique()))
@@ -129,6 +130,7 @@ def district_data(district, crimegroup1, crimetype1, window_width):
                 Total cases by Police Stations in: **{district}**
                 """)
         try:
+            dfi = df_quarter.loc[df['PoliceDistrict'] == district]
             dfs = dfi.loc[(dfi['year'] == latest_year) & (dfi['quarter'] == latest_quarter)]
             total = pd.DataFrame({'y': list(dfs.groupby(dfi['PoliceStation'])['TikimSum'].sum().values),
                                   'x': list(sorted(dfs['PoliceStation'].unique()))
