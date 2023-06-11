@@ -9,10 +9,18 @@ def station_data(tachana, crimegroup3, crimetype3, window_width):
     st.write(f"""
             ### Station Data: {tachana}
             """)
-    col1, col2, col3 = st.columns(3)
 
-    # QUARTERLY DATA FOR SPECIFIED DISTRICT
-    with col1:
+    # Setting the number of columns according to width of window being used
+    if window_width <= 600:
+        ncol = 1
+    elif 600 < window_width <= 1100:
+        ncol = 2
+    elif window_width > 1100:
+        ncol = 3
+
+    # The graph functions
+
+    def station1():
         st.markdown(f"""
         Total cases by year for: **{tachana}**
         """)
@@ -32,7 +40,7 @@ def station_data(tachana, crimegroup3, crimetype3, window_width):
         except:
             st.write('**NO DATA**')
 
-    with col2:
+    def station2():
         st.markdown(f"""
         Total cases by quarter for: **{tachana}**
         """)
@@ -53,7 +61,7 @@ def station_data(tachana, crimegroup3, crimetype3, window_width):
         except:
             st.write('**NO DATA**')
 
-    with col3:
+    def station3():
         st.write(f"""
         Total cases by type of municipality: **{latest_quarter} {latest_year} {tachana}**  
             """)
@@ -77,7 +85,7 @@ def station_data(tachana, crimegroup3, crimetype3, window_width):
         except:
             st.write('**NO DATA**')
 
-    with col1:
+    def station4():
         st.markdown(f"""
         Total cases by year (**same period**) for: **{tachana}**
         """)
@@ -99,10 +107,8 @@ def station_data(tachana, crimegroup3, crimetype3, window_width):
         except:
             st.write('**NO DATA**')
 
-
-
     # Total category of crime by quarter
-    with col2:
+    def station5():
         st.markdown(f"""
         **{crimegroup3}** by quarter **{tachana}**
         """)
@@ -125,7 +131,7 @@ def station_data(tachana, crimegroup3, crimetype3, window_width):
             st.write('**NO DATA**')
 
     # Total category of crime by quarter
-    with col3:
+    def station6():
         st.markdown(f"""
         **{crimetype3}** by quarter **{tachana}**
         """)
@@ -147,3 +153,21 @@ def station_data(tachana, crimegroup3, crimetype3, window_width):
             st.altair_chart(chart, use_container_width=True)
         except:
             st.write(' **NO DATA**')
+
+        # Making the columns
+        cols = st.columns(ncol)
+        # Making list of the graph functions
+        functions = [station1, station2, station3, station4,
+                     station5, station6]
+
+        # Putting the graphs in the right columns
+        num_functions = len(functions)
+
+        column_index = 0
+        col_list = st.columns(ncol)
+
+        for i in range(num_functions):
+            column_index = i % ncol
+
+            with col_list[column_index]:
+                functions[i]()
