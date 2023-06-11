@@ -154,5 +154,4 @@ def start_data(window_width):
         column_index = i % ncol
 
         with col_list[column_index]:
-            st.subheader(f"Function {i + 1}")
             functions[i]()
