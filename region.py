@@ -9,10 +9,18 @@ def region_data(region, crimegroup2, crimetype2, window_width):
     st.write(f"""
             ### Region Data: {region}
             """)
-    col1, col2, col3 = st.columns(3)
 
-    # QUARTERLY DATA FOR SPECIFIED DISTRICT
-    with col1:
+    # Setting the number of columns according to width of window being used
+    if window_width <= 600:
+        ncol = 1
+    elif 600 < window_width <= 1100:
+        ncol = 2
+    elif window_width > 1100:
+        ncol = 3
+
+    # The graph functions
+
+    def region1():
         st.markdown(f"""
         Total cases by year for: **{region}**
         """)
@@ -32,7 +40,7 @@ def region_data(region, crimegroup2, crimetype2, window_width):
         except:
             st.write('**NO DATA**')
 
-    with col2:
+    def region2():
         st.markdown(f"""
         Total cases by quarter for: **{region}**
         """)
@@ -54,11 +62,12 @@ def region_data(region, crimegroup2, crimetype2, window_width):
             st.write('**NO DATA**')
 
     # TIKIM FOR POLICE STATIONS IN SPECIFIED REGION
-    with col3:
+    def region3():
         st.markdown(f"""
             Total cases by Police stations in: **{region}**
             """)
         try:
+            dfi = df.loc[df['PoliceMerhav'] == f'{region}']
             dfs = dfi.loc[(dfi['year'] == latest_year) & (dfi['quarter'] == latest_quarter)]
             total = pd.DataFrame({'value': list(dfs.groupby(dfi['PoliceStation'])['TikimSum'].sum().values),
                                   'category': list(sorted(dfs['PoliceStation'].unique()))
@@ -72,7 +81,7 @@ def region_data(region, crimegroup2, crimetype2, window_width):
         except:
             st.write('**NO DATA**')
 
-    with col1:
+    def region4():
         st.markdown(f"""
         Total cases by year (**same period**) for: **{region}**
         """)
@@ -94,7 +103,7 @@ def region_data(region, crimegroup2, crimetype2, window_width):
         except:
             st.write('**NO DATA**')
 
-    with col2:
+    def region5():
         st.write(f"""
         Total cases by type of municipality: **{latest_quarter} {latest_year} {region}**  
             """)
@@ -107,8 +116,8 @@ def region_data(region, crimegroup2, crimetype2, window_width):
                                   })
             # Revaluing the categories of types of municipalities
             total['category'] = total['category'].map(lambda x: 'Jewish' if x == 1
-                                                    else 'Mixed' if x == 2
-                                                    else 'Arab')
+                                                                else 'Mixed' if x == 2
+                                                                else 'Arab')
             chart = alt.Chart(total).mark_arc(innerRadius=window_width*0.05).encode(
                 theta='value',
                 color=alt.Color('category:N', scale=alt.Scale(scheme='category10')),
@@ -119,7 +128,7 @@ def region_data(region, crimegroup2, crimetype2, window_width):
             st.write('**NO DATA**')
 
     # Total category of crime by quarter
-    with col3:
+    def region6():
         st.markdown(f"""
         **{crimegroup2}** by quarter **{region}**
         """)
@@ -142,7 +151,7 @@ def region_data(region, crimegroup2, crimetype2, window_width):
             st.write('**NO DATA**')
 
     # Total category of crime by quarter
-    with col1:
+    def region7():
         st.markdown(f"""
         **{crimetype2}** by quarter **{region}**
         """)
@@ -164,3 +173,22 @@ def region_data(region, crimegroup2, crimetype2, window_width):
             st.altair_chart(chart, use_container_width=True)
         except:
             st.write(' **NO DATA**')
+
+
+    # Making the columns
+    cols = st.columns(ncol)
+    # Making list of the graph functions
+    functions = [region1, region2, region3, region4,
+                 region5, region6, region7]
+
+    # Putting the graphs in the right columns
+    num_functions = len(functions)
+
+    column_index = 0
+    col_list = st.columns(ncol)
+
+    for i in range(num_functions):
+        column_index = i % ncol
+
+        with col_list[column_index]:
+            functions[i]()
